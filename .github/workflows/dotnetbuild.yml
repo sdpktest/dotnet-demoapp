@@ -6,7 +6,7 @@
 # This workflow integrates SecurityCodeScan with GitHub's Code Scanning feature
 # SecurityCodeScan is a vulnerability patterns detector for C# and VB.NET
 
-name: SecurityCodeScan
+name: DotNetBuild_With_MSBuild
 
 on:
   push:
@@ -19,21 +19,14 @@ jobs:
   SCS:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: nuget/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
-      - uses: microsoft/setup-msbuild@v1.0.2
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
-#      - name: Set up projects for analysis
-#        uses: security-code-scan/security-code-scan-add-action@f8ff4f2763ed6f229eded80b1f9af82ae7f32a0d
+      - name: Build app for release
+        run: msbuild src\- name: Add msbuild to PATH
+  uses: microsoft/setup-msbuild@v1.1
 
-      - name: Restore dependencies
-        run: dotnet restore
+- name: Build app for release
+  run: msbuild src\YourProjectFile.csproj -t:rebuild -verbosity:diag -property:Configuration=Release -t:rebuild -verbosity:diag -property:Configuration=Release
 
-      - name: Build
-        run: dotnet build --no-restore
 
-#      - name: Convert sarif for uploading to GitHub
-#        uses: security-code-scan/security-code-scan-results-action@cdb3d5e639054395e45bf401cba8688fcaf7a687
-
-#      - name: Upload sarif
-#        uses: github/codeql-action/upload-sarif@v2
